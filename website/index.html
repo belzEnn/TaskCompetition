@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Домашні Змагання</title>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --card-bg: #1e293b;
+            --text: #f8fafc;
+            --accent: #38bdf8;
+            --accent-hover: #0ea5e9;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .card {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 1.5rem;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        h1 { font-size: 1.2rem; text-transform: uppercase; letter-spacing: 2px; color: #94a3b8; margin-bottom: 1.5rem; }
+
+        .taskbox {
+            background: rgba(56, 189, 248, 0.1);
+            border: 1px solid var(--accent);
+            padding: 1rem;
+            border-radius: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .task-name { font-size: 1.5rem; font-weight: bold; margin: 0; }
+        .points { color: var(--accent); font-weight: bold; margin-top: 0.5rem; }
+
+        /* Стильна кнопка завантаження */
+        .file-input-container {
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+
+        #image_input { display: none; }
+
+        .file-label {
+            display: block;
+            background: #334155;
+            padding: 12px;
+            border-radius: 0.8rem;
+            cursor: pointer;
+            transition: 0.3s;
+            border: 2px dashed #475569;
+        }
+
+        .file-label:hover { background: #475569; border-color: var(--accent); }
+
+        #preview {
+            width: 100%;
+            max-height: 200px;
+            object-fit: cover;
+            border-radius: 0.8rem;
+            margin-top: 1rem;
+            display: none;
+        }
+
+        button {
+            width: 100%;
+            background: var(--accent);
+            color: #000;
+            border: none;
+            padding: 12px;
+            border-radius: 0.8rem;
+            font-weight: bold;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button:hover { background: var(--accent-hover); transform: translateY(-2px); }
+    </style>
+</head>
+<body>
+   
+    <div class="card">
+        <h1>Завдання</h1>
+        <div class="taskbox">
+            <p class="task-name">{{ task_name }}</p>
+            <p class="points">+{{ points }} балів</p>
+        </div>
+
+        <form action="/task_complete/{{ task_id }}" method="post" enctype="multipart/form-data">
+            <div class="file-input-container">
+                <label for="image_input" class="file-label">
+                    <span id="label_text">📸 Обери фото (пруф)</span>
+                    <img id="preview" src="#" alt="Прев'ю">
+                </label>
+                <input type="file" name="file" id="image_input" accept="image/*" required>
+            </div>
+            
+            <button type="submit">Здати завдання</button>
+        </form>
+    </div>
+
+    <script>
+        const input = document.getElementById('image_input');
+        const preview = document.getElementById('preview');
+        const labelText = document.getElementById('label_text');
+
+        input.onchange = evt => {
+            const [file] = input.files;
+            if (file) {
+                preview.src = URL.createObjectURL(file);
+                preview.style.display = 'block';
+                labelText.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>
