@@ -3,260 +3,105 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Домашні Змагання | Панель гравця</title>
+    <title>Домашні Змагання | Забіг</title>
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
     <style>
-        :root {
-            --bg: #0f172a;
-            --card-bg: #1e293b;
-            --text: #f8fafc;
-            --accent: #38bdf8;
-            --accent-hover: #0ea5e9;
-            --success: #10b981;
-            --danger: #ef4444;
-        }
-
-        body {
-            font-family: 'Segoe UI', Roboto, sans-serif;
-            background-color: var(--bg);
-            color: var(--text);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            padding: 20px;
-        }
-
-        .card {
-            background: var(--card-bg);
-            padding: 2rem;
-            border-radius: 1.5rem;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-            width: 100%;
-            max-width: 500px;
-        }
-
-        h1 { 
-            font-size: 1.5rem; 
-            margin-bottom: 1.5rem; 
-            color: var(--accent);
-            border-bottom: 2px solid var(--accent);
-            padding-bottom: 0.5rem;
-            text-align: center;
-        }
-
-        h2 {
-            font-size: 1rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 1rem;
-            opacity: 0.8;
-        }
-
-        .section {
-            margin-bottom: 2rem;
-            padding: 1rem;
-            background: rgba(255,255,255,0.05);
-            border-radius: 1rem;
-        }
-
-        .user-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1rem;
-        }
-
-        .username {
-            font-size: 1.4rem;
-            font-weight: bold;
-            color: var(--text);
-        }
-
-        .points {
-            background: var(--accent);
-            color: #000;
-            padding: 0.3rem 1rem;
-            border-radius: 2rem;
-            font-weight: bold;
-        }
-
-        .task-item {
-            background: rgba(56, 189, 248, 0.1);
-            border: 1px solid var(--accent);
-            padding: 1rem;
-            border-radius: 1rem;
-        }
-
-        .task-name {
-            font-size: 1.2rem;
-            font-weight: bold;
-            margin: 0 0 0.5rem 0;
-        }
-
-        .task-points {
-            color: var(--accent);
-            font-weight: bold;
-            font-size: 1.1rem;
-            margin-bottom: 1rem;
-        }
-
-        .file-input-container {
-            margin: 1rem 0;
-        }
-
-        #image_input { 
-            display: none; 
-        }
-
-        .file-label {
-            display: block;
-            background: #334155;
-            padding: 15px;
-            border-radius: 0.8rem;
-            cursor: pointer;
-            transition: 0.3s;
-            border: 2px dashed #475569;
-            text-align: center;
-        }
-
-        .file-label:hover { 
-            background: #475569; 
-            border-color: var(--accent); 
-        }
-
-        #preview {
-            width: 100%;
-            max-height: 200px;
-            object-fit: cover;
-            border-radius: 0.8rem;
-            margin-top: 1rem;
-            display: none;
-        }
-
-        .opponent-task {
-            background: rgba(239, 68, 68, 0.1);
-            border: 1px solid var(--danger);
-            padding: 1rem;
-            border-radius: 1rem;
-        }
-
-        .intercept-btn {
-            background: var(--danger);
-            color: white;
-            border: none;
-            padding: 12px;
-            border-radius: 0.8rem;
-            font-weight: bold;
-            cursor: pointer;
-            width: 100%;
-            margin-top: 1rem;
-            transition: 0.3s;
-        }
-
-        .intercept-btn:hover {
-            background: #dc2626;
-            transform: translateY(-2px);
-        }
-button[type="submit"].btn-complete {
-            width: 100%;
-            background: var(--success);
-            color: #000;
-            border: none;
-            padding: 12px;
-            border-radius: 0.8rem;
-            font-weight: bold;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: 0.3s;
-            margin-top: 1rem;
-        }
-
-        button[type="submit"].btn-complete:hover { 
-            background: #059669; 
-            transform: translateY(-2px); 
-        }
-
-        .empty-msg {
-            text-align: center;
-            opacity: 0.6;
-            font-style: italic;
-        }
+        :root { --bg: #0f172a; --card-bg: #1e293b; --text: #f8fafc; --accent: #38bdf8; --success: #10b981; --danger: #ef4444; }
+        body { font-family: 'Segoe UI', sans-serif; background-color: var(--bg); color: var(--text); display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px; overflow-x: hidden; }
+        .side-pig { position: fixed; bottom: -30px; width: 450px !important; z-index: 100; pointer-events: none; }
+        .pig-left { left: -50px; } .pig-right { right: -50px; }
+        .card { background: var(--card-bg); padding: 2rem; border-radius: 1.5rem; box-shadow: 0 10px 25px rgba(0,0,0,0.3); width: 100%; max-width: 500px; z-index: 200; position: relative; }
+        h1 { text-align: center; color: var(--accent); border-bottom: 2px solid var(--accent); padding-bottom: 10px; margin-top:0;}
+        .section { margin-bottom: 2rem; padding: 1rem; background: rgba(255,255,255,0.05); border-radius: 1rem; }
+        .user-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+        .points { background: var(--accent); color: #000; padding: 0.3rem 1rem; border-radius: 2rem; font-weight: bold; transition: all 0.3s ease; }
+        .task-item { background: rgba(56, 189, 248, 0.1); border: 1px solid var(--accent); padding: 1rem; border-radius: 1rem; position: relative;}
+        .task-name { font-size: 1.2rem; font-weight: bold; }
+        .task-points { color: var(--accent); font-weight: bold; margin-bottom: 1rem; }
+        .file-label { display: block; background: #334155; padding: 15px; border-radius: 0.8rem; cursor: pointer; border: 2px dashed #475569; text-align: center; margin: 10px 0; transition: 0.3s;}
+        .file-label:hover { border-color: var(--accent); }
+        #preview { width: 100%; max-height: 200px; object-fit: cover; border-radius: 0.8rem; display: none; margin-top: 10px; }
+        #image_input { display: none; }
+        .btn-complete { width: 100%; background: var(--success); color: #000; border: none; padding: 12px; border-radius: 0.8rem; font-weight: bold; cursor: pointer; font-size: 1rem; }
+        .sent-badge { background: var(--success); color: #000; font-weight: bold; padding: 4px 12px; border-radius: 10px; position: absolute; top: -15px; right: 10px; animation: fadeUp 2.5s forwards; box-shadow: 0 4px 6px rgba(0,0,0,0.3); }
+        @keyframes fadeUp { 0% { opacity: 1; transform: translateY(0); } 70% { opacity: 1; transform: translateY(-10px); } 100% { opacity: 0; transform: translateY(-20px); } }
     </style>
 </head>
 <body>
-    <div class="card">
-        <h1>Домашні змагання</h1>
+    <img src="/images/user1svinia.png" class="side-pig pig-left" onerror="this.style.display='none'">
+    <img src="/images/user2kaban.png" class="side-pig pig-right" onerror="this.style.display='none'">
 
-        <div class="section">
-            <div class="user-header">
-                <span class="username">{{ username }}</span>
-                <span class="points">{{ user_points }} балів</span>
-            </div>
+    <div id="game-ui" hx-get="/game" hx-trigger="every 5s" hx-select="#game-ui" hx-swap="outerHTML">
+        <div class="card">
+            <h1>Домашні змагання</h1>
+            <div class="section">
+                <div class="user-header">
+                    <span style="font-size: 1.4rem; font-weight: bold;">{{ username }}</span>
+                    <span class="points" id="my-points">{{ user_points }} см</span>
+                </div>
 
-            <h2>Твоє завдання</h2>
-            <div class="task-item">
-                {% if user_task %}
-                    <div class="task-name">{{ user_task.name }}</div>
-                    <div class="task-points">+{{ user_task.points }} балів</div>
-                    
-                    <form action="/task_complete/{{ user_task.id }}" method="post" enctype="multipart/form-data">
-                        <div class="file-input-container">
+                <h2 style="font-size: 1rem; color: #94a3b8;">Поточне завдання:</h2>
+                <div class="task-item">
+                    {% if just_sent %}
+                        <div class="sent-badge">✅ Полетіло до судді!</div>
+                    {% endif %}
+
+                    {% if user_task %}
+                        <div class="task-name">{{ user_task.name }}</div>
+                        <div class="task-points">+{{ user_task.points }} см</div>
+                        
+                        <form hx-post="/task_complete/{{ user_task.id }}" 
+                              hx-encoding="multipart/form-data" 
+                              hx-target="#game-ui" 
+                              hx-select="#game-ui">
                             <label for="image_input" class="file-label">
-                                <span id="label_text">📸 Натисни, щоб додати фото (пруф)</span>
-                                <img id="preview" src="#" alt="Прев'ю">
+                                <span id="label_text">📸 Натисни, щоб зробити фото</span>
+                                <img id="preview" src="#">
                             </label>
-                            <input type="file" name="file" id="image_input" accept="image/*" required>
-                        </div>
-                        <button type="submit" class="btn-complete">Здати завдання</button>
-                    </form>
-                {% else %}
-                    <p class="empty-msg">Завдань поки немає. Онови сторінку!</p>
-                {% endif %}
-            </div>
-        </div>
-
-        <div class="section" style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1.5rem;">
-            <div class="user-header">
-                <span class="username">🎯 {{ opponent.name }}</span>
-                <span class="points">{{ opponent.points }} балів</span>
+                            <input type="file" name="file" id="image_input" accept="image/*" required onchange="showPreview(this)">
+                            <button type="submit" class="btn-complete">Відправити і йти далі 🚀</button>
+                        </form>
+                    {% else %}
+                        <p style="text-align: center; color: var(--success); font-weight: bold; font-size: 1.2rem;">🏆 Ти виконав усі доступні завдання!</p>
+                    {% endif %}
+                </div>
             </div>
 
-            <h2>Завдання суперника</h2>
-            <div class="opponent-task">
-                {% if opponent.task and opponent.name != "Чекаємо гравця..." %}
-                    <div class="task-name">{{ opponent.task.name }}</div>
-                    <div class="task-points">+{{ opponent.task.points }} балів</div>
-                    
-                    <form action="/intercept_task" method="post">
-                        <button type="submit" class="intercept-btn">🚀 Перехопити (-5 🪙, +3 ⚡️)</button>
-                    </form>
-                {% else %}
-                    <p class="empty-msg">Суперник поки відпочиває або ще не зайшов у гру.</p>
-                {% endif %}
+            <div class="section" style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1.5rem;">
+                <div class="user-header">
+                    <span>🎯 {{ opponent.name }}</span>
+                    <span class="points">{{ opponent.points }} см</span>
+                </div>
+                <p style="font-size: 0.9rem; color: #94a3b8; margin:0;">
+                    Зараз виконує: <strong style="color: var(--text);">{{ opponent.task.name if opponent.task else "Відпочиває" }}</strong>
+                </p>
             </div>
         </div>
     </div>
 
     <script>
-        const input = document.getElementById('image_input');
-        const preview = document.getElementById('preview');
-        const labelText = document.getElementById('label_text');
-
-        if (input) {
-            input.onchange = function() {
-                const file = input.files[0];
-                if (file) {
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        preview.src = e.target.result;
-                        preview.style.display = 'block';
-                        labelText.style.display = 'none';
-                    }
-                    reader.readAsDataURL(file);
-                }
+        function showPreview(input) {
+            const preview = document.getElementById('preview');
+            const labelText = document.getElementById('label_text');
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = e => {
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                    labelText.style.display = 'none';
+                };
+                reader.readAsDataURL(input.files[0]);
             }
         }
+
+        // Зупиняємо автооновлення сторінки, поки гравець вибирає фото, щоб воно не зникло
+        document.body.addEventListener('htmx:beforeRequest', function(evt) {
+            const fileInput = document.getElementById('image_input');
+            // Якщо це запит GET (полінг) і файл вже вибрано - скасовуємо оновлення
+            if (evt.detail.requestConfig.verb === 'get' && fileInput && fileInput.files.length > 0) {
+                evt.preventDefault(); 
+            }
+        });
     </script>
 </body>
 </html>

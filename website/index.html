@@ -3,86 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Домашні Змагання | Вхід</title>
+    <title>Вхід | Домашні змагання</title>
     <style>
-        :root {
-            --bg: #0f172a;
-            --card-bg: #1e293b;
-            --text: #f8fafc;
-            --accent: #38bdf8;
-        }
-
         body {
-            font-family: 'Segoe UI', Roboto, sans-serif;
-            background-color: var(--bg);
-            color: var(--text);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            padding: 20px;
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #0f172a; color: #f8fafc;
+            display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0;
         }
-
-        .card {
-            background: var(--card-bg);
-            padding: 2.5rem;
-            border-radius: 1.5rem;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-            width: 100%;
-            max-width: 400px;
-            text-align: center;
+        .login-box {
+            background: #1e293b; padding: 2.5rem; border-radius: 1.5rem;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5); text-align: center; border: 1px solid #38bdf8;
         }
-
-        h1 { color: var(--accent); margin-bottom: 1.5rem; }
-        
-        input { 
-            width: 100%; 
-            padding: 12px; 
-            margin: 10px 0; 
-            border-radius: 0.8rem; 
-            border: 1px solid #475569; 
-            background: #334155; 
-            color: white;
-            box-sizing: border-box;
+        h1 { color: #38bdf8; margin-bottom: 20px; }
+        input {
+            width: 100%; padding: 12px; margin-bottom: 20px; border-radius: 0.5rem;
+            border: 1px solid #475569; background: #0f172a; color: white; font-size: 1.1rem; box-sizing: border-box;
         }
-
-        button { 
-            width: 100%; 
-            background: var(--accent); 
-            color: #000; 
-            border: none; 
-            padding: 14px; 
-            border-radius: 0.8rem; 
-            font-weight: bold; 
-            cursor: pointer; 
-            margin-top: 15px;
-            transition: 0.3s;
+        button {
+            width: 100%; background: #10b981; color: black; border: none;
+            padding: 12px; border-radius: 0.5rem; font-weight: bold; font-size: 1.1rem; cursor: pointer; transition: 0.3s;
         }
-
-        button:hover { opacity: 0.9; transform: translateY(-2px); }
+        button:hover { background: #059669; transform: translateY(-2px); }
     </style>
 </head>
 <body>
-
-    <div class="card">
-        {% if step == "register" %}
-            <h1>Ласкаво просимо!</h1>
-            <p>Введи свій нік та ID кімнати:</p>
-            <form action="/register" method="post">
-                <input type="text" name="username" placeholder="Твій нікнейм" required>
-                <input type="text" name="room_id" placeholder="ID кімнати (6 цифр)" maxlength="6" required>
-                <button type="submit">Увійти в гру</button>
-            </form>
-        {% else %}
-            <h1>Привіт, {{ username }}!</h1>
-            <p>Введи ID кімнати, щоб перейти:</p>
-            <form action="/change_room" method="post">
-                <input type="text" name="room_id" placeholder="ID кімнати" maxlength="6" required>
-                <button type="submit">Перейти в кімнату</button>
-            </form>
-        {% endif %}
+    <div class="login-box">
+        <h1>🐷 Домашні Змагання</h1>
+        <form action="/login" method="post">
+            <input type="text" name="username" placeholder="Введи свій нікнейм..." required>
+            <button type="submit">Увірватися в гру!</button>
+        </form>
     </div>
-
 </body>
 </html>

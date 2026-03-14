@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Панель цара свина
+    </title>
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    <style>
+        :root { --bg: #0f172a; --card-bg: #1e293b; --text: #f8fafc; --accent: #38bdf8; --success: #10b981; --danger: #ef4444; }
+        body { font-family: 'Segoe UI', sans-serif; background-color: var(--bg); color: var(--text); padding: 20px; margin: 0; }
+        .container { max-width: 800px; margin: 0 auto; }
+        h1 { text-align: center; color: var(--accent); border-bottom: 2px solid var(--accent); padding-bottom: 10px; }
+        .pending-card { background: var(--card-bg); border-radius: 1rem; padding: 1.5rem; margin-bottom: 2rem; border: 1px solid rgba(255,255,255,0.1); }
+        .info { margin-bottom: 1rem; font-size: 1.1rem;}
+        .info strong { color: var(--accent); }
+        .image-container { width: 100%; background: #000; border-radius: 0.5rem; overflow: hidden; margin-bottom: 1.5rem; text-align: center; }
+        .proof-image { width: 100%; display: block; max-height: 600px; object-fit: contain; }
+        .btn-group { display: flex; gap: 1rem; }
+        .btn { flex: 1; padding: 15px; border: none; border-radius: 0.5rem; font-weight: bold; cursor: pointer; transition: 0.2s; font-size: 1.1rem; }
+        .btn-approve { background-color: var(--success); color: black;}
+        .btn-reject { background-color: var(--danger); color: white; }
+        .btn:hover { opacity: 0.8; transform: translateY(-2px); }
+        .empty-msg { text-align: center; color: #94a3b8; margin-top: 50px; font-size: 1.2rem; }
+    </style>
+</head>
+<body>
+    <div class="container" id="admin-container" hx-get="/admin" hx-trigger="every 3s" hx-select="#admin-container" hx-swap="outerHTML">
+        <h1>Цар свин</h1>
+
+        {% for p in pending %}
+        <div class="pending-card">
+            <div class="info">
+                <p><strong>Гравець:</strong> {{ p.username }} (завдання на {{ p.points }} см)</p>
+                <p><strong>Завдання:</strong> {{ p.task_name }}</p>
+            </div>
+            <div class="image-container">
+                <img src="/{{ p.file_path }}" class="proof-image" alt="Фото на перевірку">
+            </div>
+            <div class="btn-group">
+                <form hx-post="/admin/action/{{ p.uid }}/approve" hx-target="#admin-container" hx-select="#admin-container" style="flex:1;">
+                    <button type="submit" class="btn btn-approve">✅ Дати бали</button>
+                </form>
+                <form hx-post="/admin/action/{{ p.uid }}/reject" hx-target="#admin-container" hx-select="#admin-container" style="flex:1;">
+                    <button type="submit" class="btn btn-reject">❌ Відхилити</button>
+                </form>
+            </div>
+        </div>
+        {% else %}
+            <div class="empty-msg">
+                <p>Черга порожня. Гравці ще фотографують... 📸</p>
+            </div>
+        {% endfor %}
+    </div>
+</body>
+</html>
